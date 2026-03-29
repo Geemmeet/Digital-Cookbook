@@ -1,12 +1,15 @@
 import Hero from '../components/Hero'
 import lunchImg from '../assets/hero/lunch.jpg'
+import RecipeGrid from '../components/RecipeGrid'
+
+const frukostRecept = [{}]
 
 export default function Lunch() {
   return (
     <>
       <Hero title="Lunch" image={lunchImg} />
-      <main className="p-6">
-        {/* recipes go here later */}
+      <main>
+        <RecipeGrid recipes={frukostRecept} />
       </main>
     </>
   )

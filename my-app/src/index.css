@@ -1,3 +1,13 @@
 @import "tailwindcss";
 
-/* Custom Styles */
+/* Custom Colors */
+@theme {
+  --color-primary: #B8312F;
+  --color-primary-hover: #8C2220;
+  --color-accent: #2D3F5F;
+  --color-accent-hover: #1E2D45;
+  --color-surface: #F0E6DC;
+  --color-surface-dark: #E8D5C4;
+  --color-text: #2A1F1A;
+  --color-border: #D4BBA8;
+}
