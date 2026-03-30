@@ -10,6 +10,7 @@ export default function Navbar() {
     { name: "Frukost", path: "/" },
     { name: "Lunch", path: "/lunch" },
     { name: "Middag", path: "/middag" },
+    { name: "Baka", path: "/baka" }
   ];
 
   return (
