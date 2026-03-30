@@ -4,7 +4,7 @@ import RecipeGrid from '../components/RecipeGrid'
 
 //Databas supabase och typ för recepten
 import { supabase } from '../supabaseClient'
-import { Recipe } from '../types'
+import type { Recipe } from '../types'
 
 interface CategoryPageProps {
   category: string

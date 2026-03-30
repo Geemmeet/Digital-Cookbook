@@ -7,6 +7,7 @@ import frukostImg from './assets/hero/frukost.jpg'
 import lunchImg from './assets/hero/lunch.jpg'
 import middagImg from './assets/hero/middag.jpg'
 import bakaImg from './assets/hero/baka.jpg'
+import NyttRecept from './pages/NyttRecept'
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
         <Route 
           path="/baka" 
           element={<CategoryPage category="baka" title="Baka" heroImage={bakaImg} />} 
+        />
+        <Route
+          path="/nytt-recept"
+          element={<NyttRecept />}
         />
       </Routes>
       <Footer />

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Recipe } from '../types'
+import type { Recipe } from '../types'
 
 //Komponenten tar emot hela recept-objektet
 //Ett recept per kort

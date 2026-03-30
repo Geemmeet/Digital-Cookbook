@@ -15,7 +15,7 @@ interface Step {
 }
 
 // En lista över vanliga måttenheter för ingredienser
-const units = ["msk", "tsk", "st", "dl", "ml", "l", "g", "kg", "krm", "nypa"];
+const units = ["msk", "tsk", "st", "dl", "ml", "l", "g", "kg", "krm", "nypa", "portioner"];
 
 export default function RecipeForm() {
   //Use states för att hantera formulärets data

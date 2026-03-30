@@ -1,5 +1,5 @@
 import RecipeCard from './RecipeCard'
-import { Recipe } from '../types'
+import type { Recipe } from '../types'
 
 // lista av recept som kommer in som props
 interface RecipeGridProps {
