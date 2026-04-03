@@ -1,12 +1,13 @@
 # Kokbok - portfolioprojekt fullstack
 
-> Ett recept- och matplaneringsverktyg byggt med React + FastAPI + Supabase
+> En webbsida för att lagra dina favoritrecept på en och samma plats.
+  Byggt med React + FastAPI + Supabase
 
-![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)
+[![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
 
 ---
 
@@ -66,11 +67,12 @@ VITE_API_URL=http://localhost:8000
 ---
 
 ## Projektstruktur
+```text
 Kokbok/
-├── my-app/
-│   ├── frontend/    # React-app med Tailwind CSS och Lucide-ikoner
-│   └── backend/     # Python-API med Supabase Admin SDK
-
+└── my-app/
+    ├── frontend/    # React-app med Tailwind CSS och Lucide-ikoner
+    └── backend/     # Python-API med Supabase Admin SDK
+```
 ---
 
 ## Teknikstack
