@@ -4,7 +4,15 @@ export const inputs = {
 };
 
 export const buttons = {
+  // Röd knapp (Primary)
   primary: "py-3 px-5 rounded-xl bg-primary text-white font-semibold hover:bg-primary-hover transition-colors duration-200 shadow-sm disabled:opacity-50",
+  
+  // Blå knapp (Accent)
+  accent: "py-3 px-5 rounded-xl bg-accent text-white font-semibold hover:bg-accent-hover transition-colors duration-200 shadow-sm disabled:opacity-50",
+  
+  // Små runda plus-knappar (Blå)
+  plus: "w-10 h-10 flex items-center justify-center rounded-xl bg-accent text-white text-xl font-bold hover:bg-accent-hover transition-colors duration-200 shadow-sm",
+  
   secondary: "py-3 px-5 rounded-xl bg-surface-dark text-text font-semibold hover:bg-border transition-colors duration-200",
   icon: "text-border hover:text-text transition-colors duration-200 text-lg",
 };

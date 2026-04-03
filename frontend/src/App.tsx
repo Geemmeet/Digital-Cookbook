@@ -1,40 +1,30 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/navbar'
 import Footer from './components/Footer'
 
 import CategoryPage from './pages/CategoryPage'
-import frukostImg from './assets/hero/frukost.jpg'
-import lunchImg from './assets/hero/lunch.jpg'
-import middagImg from './assets/hero/middag.jpg'
-import bakaImg from './assets/hero/baka.jpg'
+import RecipeDetail from './pages/RecipeDetail'
 import NyttRecept from './pages/NyttRecept'
 
 function App() {
   return (
     <>
       <Navbar />
-      <Routes>
-        <Route 
-          path="/frukost" 
-          element={<CategoryPage category="frukost" title="Frukost" heroImage={frukostImg} />} 
-        />
-        <Route 
-          path="/lunch" 
-          element={<CategoryPage category="lunch" title="Lunch" heroImage={lunchImg} />} 
-        />
-        <Route 
-          path="/middag" 
-          element={<CategoryPage category="middag" title="Middag" heroImage={middagImg} />} 
-        />
-        <Route 
-          path="/baka" 
-          element={<CategoryPage category="baka" title="Baka" heroImage={bakaImg} />} 
-        />
-        <Route
-          path="/nytt-recept"
-          element={<NyttRecept />}
-        />
-      </Routes>
+      <div className="min-h-screen">
+        <Routes>
+          {/* 1. Kategori */}
+          <Route path="/:category" element={<CategoryPage />} />
+          
+          {/* 2. Recept */}
+          <Route path="/:category/:id" element={<RecipeDetail />} />
+          
+          {/* 3. Nytt recept */}
+          <Route path="/nytt-recept" element={<NyttRecept />} />
+          
+          {/* 4. Redirect från "/" */}
+          <Route path="/" element={<Navigate to="/frukost" />} />
+        </Routes>
+      </div>
       <Footer />
     </>
   )

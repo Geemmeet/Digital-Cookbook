@@ -17,7 +17,7 @@ Du behöver **Node.js** och **Python** installerat på din dator.
 
 ### 1. Backend (FastAPI)
 ```bash
-cd Kokbok/my-app/backend
+cd Kokbok/backend
 
 # Skapa och aktivera virtuell miljö
 python -m venv venv
@@ -27,9 +27,11 @@ python -m venv venv
 # Mac/Linux
 source venv/bin/activate
 
-# Installera beroenden och starta servern
+# Installera beroenden
 pip install -r requirements.txt
-uvicorn main:app --reload
+
+# Starta servern
+python main.py
 ```
 
 Servern körs på **http://localhost:8000**

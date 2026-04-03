@@ -1,9 +1,9 @@
+//Image är valfritt, har en fallback bild
 export interface Recipe {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
-  image: string;
+  image_url?: string; 
   time: string;
   servings: number;
-  category?: string;
+  description?: string;
 }

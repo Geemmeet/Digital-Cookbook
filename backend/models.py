@@ -1,19 +1,17 @@
 from pydantic import BaseModel
-from enum import Enum
+from typing import List, Optional
 
-class Kategori(str, Enum):
-    """Tillåtna kategorier för ett recept."""
-    frukost = "frukost"
-    lunch = "lunch"
-    middag = "middag"
-    baka = "baka"
+class IngredientModel(BaseModel):
+    amount: str
+    unit: str
+    name: str
 
-class Recept(BaseModel):
-    """Datastruktur för ett recept. Valideras av Pydantic innan det sparas i databasen."""
-    rubrik: str
-    beskrivning: str
-    tidsatgang: str
-    ingredienser: list[str]
-    steg: list[str]
-    kategori: Kategori
-    foto_url: str | None = None
+class RecipeModel(BaseModel):
+    name: str
+    description: Optional[str] = None
+    cooking_time: int
+    servings: int           # <--- Viktigt!
+    category: str
+    ingredients: List[IngredientModel]
+    steps: List[str]
+    image_url: Optional[str] = None
