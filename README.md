@@ -82,3 +82,25 @@ Kokbok/
 | Frontend | React, Vite, Tailwind CSS, Lucide |
 | Backend | Python, FastAPI, Uvicorn |
 | Databas | Supabase (PostgreSQL) |
+
+---
+
+## Teknik & arkitektur
+
+**Frontend**
+- **React** — Bygger användargränssnittet med komponenter och hooks
+- **Vite** — Utvecklingsserver och byggverktyg för React-appen
+- **Tailwind CSS** — Stilsättning direkt i HTML-klasser
+- **Lucide** — Ikonbibliotek
+
+**Backend**
+- **FastAPI** — Python-ramverk som tar emot requests från frontend och hanterar API-logik
+- **Pydantic** — Validerar att inkommande data har rätt format och typ
+- **Uvicorn** — Servern som kör FastAPI-appen
+
+**Databas**
+- **Supabase** — PostgreSQL-databas i molnet, hanteras via Supabase Admin SDK i backend
+
+**Hur det hänger ihop**
+
+React (frontend) → skickar data via HTTP → FastAPI tar emot → Pydantic validerar → Supabase sparar
