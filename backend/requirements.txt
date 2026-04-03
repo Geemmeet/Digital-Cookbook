@@ -1,0 +1,5 @@
+fastapi        # webbramverk för API
+uvicorn        # server som kör FastAPI
+pydantic       # validerar inkommande data
+supabase       # pratar med databasen
+python-dotenv  # läser .env-filer
