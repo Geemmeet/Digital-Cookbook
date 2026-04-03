@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
+import { theme } from "../styles/theme";
 
 /**
  * Representerar en enskild ingrediens i ett recept.
@@ -19,14 +20,28 @@ interface Step {
   description: string;
 }
 
-const units = ["dl", "msk", "tsk", "krm", "nypa", "l", "ml", "cl", "st","kg", "g", "portioner"];
+// Grupperade enheter för bättre UX
+const unitGroups = [
+  { 
+    label: "Köksmått", 
+    units: ["dl", "msk", "tsk", "krm"] 
+  },
+  { 
+    label: "Volym", 
+    units: ["l", "dl", "ml", "cl"] 
+  },
+  { 
+    label: "Vikt", 
+    units: ["kg", "g", "mg"] 
+  },
+  { 
+    label: "Övrigt", 
+    units: ["st", "portioner", "nypa"] 
+  }
+];
 
-const inputClass = "w-full px-4 py-3 rounded-xl border border-accent/30 bg-white text-text text-sm outline-none focus:ring-2 focus:ring-accent transition-colors duration-200";
-
-const labelClass = "block text-sm font-semibold text-accent mb-1";
-
-// Hooks för tillfällig lagring och hantering av formulärdata i webbläsaren innan inskick till backend.
 export default function RecipeForm() {
+  // Hooks för tillfällig lagring av data
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [time, setTime] = useState("");
@@ -37,6 +52,9 @@ export default function RecipeForm() {
   const [currentIngredient, setCurrentIngredient] = useState({ amount: "", unit: "st", name: "" });
   const [steps, setSteps] = useState<Step[]>([]);
   const [currentStep, setCurrentStep] = useState("");
+
+  // Packar upp stilarna för kortare kod i JSX
+  const { input, label, buttonPrimary, buttonSecondary, ingredientRow, iconButton } = theme;
 
   // Bildhantering
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +107,6 @@ export default function RecipeForm() {
     }
 
     try {
-      // 1. Ladda upp bild direkt till Supabase Storage
       let foto_url = "";
       if (imageFile) {
         const fileExt = imageFile.name.split(".").pop();
@@ -108,7 +125,6 @@ export default function RecipeForm() {
         foto_url = urlData.publicUrl;
       }
 
-      // 2. Skicka receptdata till FastAPI
       const response = await fetch("http://localhost:8000/recept", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -131,7 +147,6 @@ export default function RecipeForm() {
 
       alert("Receptet har sparats i Kokboken!");
 
-      // 3. Nollställ formuläret
       setName("");
       setDescription("");
       setTime("");
@@ -151,60 +166,69 @@ export default function RecipeForm() {
 
       {/* Namn */}
       <div>
-        <label className={labelClass}>Maträttens namn</label>
+        <label className={label}>Maträttens namn</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="T.ex. Köttbullar med potatismos"
-          className={inputClass}
+          className={input}
         />
       </div>
 
       {/* Beskrivning */}
       <div>
-        <label className={labelClass}>Kortare beskrivning</label>
+        <label className={label}>Kortare beskrivning</label>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Beskriv rätten kortfattat..."
           rows={3}
-          className={`${inputClass} resize-none`}
+          className={`${input} resize-none`}
         />
       </div>
 
-      {/* Tid */}
-      <div>
-        <label className={labelClass}>Tid (minuter)</label>
-        <input
-          type="number"
-          min="1"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          placeholder="T.ex. 30"
-          className={inputClass}
-        />
+      {/* Tid och Kategori i bredd */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className={label}>Tid (minuter)</label>
+          <input
+            type="number"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className={input}
+          />
+        </div>
+        <div>
+          <label className={label}>Kategori</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className={input}>
+            <option value="frukost">Frukost</option>
+            <option value="lunch">Lunch</option>
+            <option value="middag">Middag</option>
+            <option value="baka">Baka</option>
+          </select>
+        </div>
       </div>
 
       {/* Bild */}
       <div>
-        <label className={labelClass}>Bild</label>
-        <div className="w-full rounded-xl border-2 border-dashed border-accent/30 overflow-hidden">
+        <label className={label}>Bild</label>
+        <div className="w-full rounded-xl border-2 border-dashed border-border overflow-hidden bg-white">
           {imagePreview ? (
             <div className="relative">
               <img src={imagePreview} alt="Förhandsgranskning" className="w-full h-48 object-cover" />
               <button
                 type="button"
                 onClick={() => { setImagePreview(null); setImageFile(null); }}
-                className="absolute top-2 right-2 text-xs font-bold px-2 py-1 rounded-md bg-primary text-white hover:bg-primary-hover"
+                className="absolute top-2 right-2 bg-primary text-white px-3 py-1 rounded-lg text-xs font-bold shadow-md"
               >
                 Ta bort
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center h-32 cursor-pointer hover:bg-accent/5 transition-colors">
+            <label className="flex flex-col items-center justify-center h-32 cursor-pointer hover:bg-surface transition-colors">
               <span className="text-3xl mb-1">📷</span>
-              <span className="text-sm text-accent/50 font-medium">Klicka för att ladda upp bild</span>
+              <span className="text-sm text-text/50 font-medium">Ladda upp bild</span>
               <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
             </label>
           )}
@@ -213,64 +237,55 @@ export default function RecipeForm() {
 
       {/* Ingredienser */}
       <div>
-        <label className={labelClass}>Ingredienser</label>
-        {ingredients.length > 0 && (
-          <ul className="mb-3 flex flex-col gap-1">
-            {ingredients.map((ing) => (
-              <li key={ing.id} className="flex items-center gap-2">
-                <span className="text-accent text-lg leading-none">•</span>
-                <span className="text-sm text-text flex-1">{ing.amount} {ing.unit} {ing.name}</span>
-                <button type="button" onClick={() => handleEditIngredient(ing.id)} className="text-xs font-semibold px-2 py-1 rounded-md bg-focus/20 text-accent hover:bg-focus/40 transition-colors">Redigera</button>
-                <button type="button" onClick={() => setIngredients((prev) => prev.filter((i) => i.id !== ing.id))} className="text-xs font-bold px-2 py-1 rounded-md bg-primary text-white hover:bg-primary-hover transition-colors">✕</button>
-              </li>
-            ))}
-          </ul>
-        )}
+        <label className={label}>Ingredienser</label>
+        <div className="flex flex-col gap-2 mb-3">
+          {ingredients.map((ing) => (
+            <div key={ing.id} className={ingredientRow}>
+              <span className="text-sm text-text font-medium">{ing.amount} {ing.unit} {ing.name}</span>
+              <div className="flex gap-2">
+                <button type="button" onClick={() => handleEditIngredient(ing.id)} className="text-xs font-semibold text-primary">Redigera</button>
+                <button type="button" onClick={() => setIngredients((p) => p.filter((i) => i.id !== ing.id))} className={iconButton}>✕</button>
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="flex gap-2 items-center">
-          <input type="text" value={currentIngredient.amount} onChange={(e) => setCurrentIngredient((prev) => ({ ...prev, amount: e.target.value }))} placeholder="Antal" className="w-20 px-3 py-3 rounded-xl border border-accent/30 text-sm outline-none focus:ring-2 focus:ring-accent bg-white transition-colors duration-200" />
-          <select value={currentIngredient.unit} onChange={(e) => setCurrentIngredient((prev) => ({ ...prev, unit: e.target.value }))} className="px-3 py-3 rounded-xl border border-accent/30 text-sm outline-none focus:ring-2 focus:ring-accent bg-white transition-colors duration-200">
-            {units.map((u) => <option key={u} value={u}>{u}</option>)}
+          <input type="text" value={currentIngredient.amount} onChange={(e) => setCurrentIngredient((p) => ({ ...p, amount: e.target.value }))} placeholder="Antal" className="w-20 px-3 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-surface-dark bg-white" />
+          <select value={currentIngredient.unit} onChange={(e) => setCurrentIngredient((p) => ({ ...p, unit: e.target.value }))} className="px-3 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-surface-dark bg-white">
+            {unitGroups.map((group) => (
+              <optgroup key={group.label} label={group.label}>
+                {group.units.map((u) => <option key={u} value={u}>{u}</option>)}
+              </optgroup>
+            ))}
           </select>
-          <input type="text" value={currentIngredient.name} onChange={(e) => setCurrentIngredient((prev) => ({ ...prev, name: e.target.value }))} placeholder="Ingrediens" className="flex-1 px-3 py-3 rounded-xl border border-accent/30 text-sm outline-none focus:ring-2 focus:ring-accent bg-white transition-colors duration-200" />
-          <button type="button" onClick={handleAddIngredient} className="bg-accent text-white rounded-xl px-4 py-3 text-xl font-bold hover:bg-accent-hover transition-colors duration-200">+</button>
+          <input type="text" value={currentIngredient.name} onChange={(e) => setCurrentIngredient((p) => ({ ...p, name: e.target.value }))} placeholder="Ingrediens" className="flex-1 px-3 py-3 rounded-xl border border-border outline-none focus:ring-2 focus:ring-surface-dark bg-white" />
+          <button type="button" onClick={handleAddIngredient} className="bg-primary text-white rounded-xl px-4 py-3 font-bold">+</button>
         </div>
       </div>
 
       {/* Steg */}
       <div>
-        <label className={labelClass}>Steg</label>
-        {steps.length > 0 && (
-          <ul className="mb-3 flex flex-col gap-1">
-            {steps.map((step) => (
-              <li key={step.id} className="flex items-start gap-2">
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-accent text-white text-xs font-bold flex items-center justify-center mt-0.5">{step.id}</span>
-                <span className="text-sm text-text flex-1">{step.description}</span>
-                <button type="button" onClick={() => handleEditStep(step.id)} className="text-xs font-semibold px-2 py-1 rounded-md bg-focus/20 text-accent hover:bg-focus/40 transition-colors flex-shrink-0">Redigera</button>
-                <button type="button" onClick={() => handleDeleteStep(step.id)} className="text-xs font-bold px-2 py-1 rounded-md bg-primary text-white hover:bg-primary-hover transition-colors flex-shrink-0">✕</button>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="flex gap-2 items-center">
-          <textarea value={currentStep} onChange={(e) => setCurrentStep(e.target.value)} placeholder="Beskriv steget..." rows={2} className="flex-1 px-3 py-3 rounded-xl border border-accent/30 text-sm outline-none focus:ring-2 focus:ring-accent resize-none bg-white transition-colors duration-200" />
-          <button type="button" onClick={handleAddStep} className="bg-accent text-white rounded-xl px-4 py-3 text-xl font-bold hover:bg-accent-hover transition-colors duration-200 self-end">+</button>
+        <label className={label}>Instruktioner</label>
+        <div className="flex flex-col gap-2 mb-3">
+          {steps.map((s) => (
+            <div key={s.id} className={ingredientRow}>
+              <div className="flex gap-3">
+                <span className="font-bold text-primary">{s.id}.</span>
+                <span className="text-sm text-text">{s.description}</span>
+              </div>
+              <button type="button" onClick={() => handleDeleteStep(s.id)} className={iconButton}>✕</button>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2 items-end">
+          <textarea value={currentStep} onChange={(e) => setCurrentStep(e.target.value)} placeholder="Beskriv steget..." rows={2} className={`${input} flex-1 resize-none`} />
+          <button type="button" onClick={handleAddStep} className="bg-primary text-white rounded-xl px-4 py-3 font-bold">+</button>
         </div>
       </div>
 
-      {/* Kategori */}
-      <div>
-        <label className={labelClass}>Kategori</label>
-        <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputClass}>
-          <option value="frukost">Frukost</option>
-          <option value="lunch">Lunch</option>
-          <option value="middag">Middag</option>
-          <option value="baka">Baka</option>
-        </select>
-      </div>
-
-      {/* Skicka */}
-      <button type="submit" className="w-full mt-4 py-4 rounded-xl bg-accent text-white text-base font-bold hover:bg-accent-hover transition-colors duration-200 shadow-md">
-        Spara recept
+      {/* Skicka-knapp */}
+      <button type="submit" className={`${buttonPrimary} w-full mt-4 text-lg`}>
+        Spara Recept
       </button>
 
     </form>
