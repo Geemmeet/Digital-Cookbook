@@ -1,7 +1,7 @@
 # Digital Kokbok - portfolioprojekt fullstack
 
-> Samla alla dina favoritrecept på ett ställe – enkelt att lägga till och alltid tillgängliga.
-> Byggt som ett portfolioprojekt med planer på inloggning och sökning i framtiden.
+> Alla dina recept, alltid nära till hands. Sluta leta efter borttappade länkar och fokusera på matlagningen.
+> Byggt som ett portfolioprojekt med planer på inloggning, filtrering och sökning i framtiden.
 
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev)
