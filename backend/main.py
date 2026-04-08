@@ -81,8 +81,8 @@ async def create_recipe(recipe: RecipeModel): # Använder RecipeModel här!
 
         return {
             "status": "success",
-            "recipe_id": new_recipe_id,
-            "message": f"Receptet '{recipe.name}' har sparats framgångsrikt!"
+            "id": new_recipe_id,
+            "category": recipe.category.lower(),
         }
 
     except Exception as e:
@@ -146,8 +146,6 @@ async def delete_recipe(recept_id: str):
         # 3. Radera receptet från SQL
         supabase.table("recipes").delete().eq("id", recept_id).execute()
 
-        return {"status": "success", "message": "Recept och tillhörande bild raderat"}
-
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Kunde inte radera: {str(e)}")
 
@@ -182,8 +180,6 @@ async def update_recipe(recept_id: str, data: RecipeUpdateModel):
             for i, step in enumerate(data.steps)
         ]
         supabase.table("steps").insert(steps_to_insert).execute()
-
-        return {"status": "success", "message": f"Recept {recept_id} har uppdaterats"}
 
     except Exception as e:
         print(f"Error: {e}")

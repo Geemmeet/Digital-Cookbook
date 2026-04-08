@@ -1,5 +1,5 @@
 export const inputs = {
-  base: "w-full px-4 py-3 rounded-xl border border-border bg-white text-text text-sm outline-none focus:ring-2 focus:ring-surface-dark transition-colors duration-200",
+  base: "px-4 py-3 rounded-xl border border-border bg-white text-text text-sm outline-none focus:ring-2 focus:ring-surface-dark transition-colors duration-200",
   label: "block text-sm font-semibold text-text mb-1",
 };
 
@@ -23,5 +23,5 @@ export const layout = {
 };
 
 export const errorMessage = {
-  warning: "text-[#B8312F] text-xs mt-1 font-medium italic"
+  warning: "text-primary text-xs mt-1 me-5 font-medium italic whitespace-nowrap"
 }

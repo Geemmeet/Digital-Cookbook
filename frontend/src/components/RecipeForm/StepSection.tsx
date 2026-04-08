@@ -1,4 +1,6 @@
 import { inputs, buttons, layout, errorMessage } from "../../styles/theme";
+import { inputClass } from "../../utils/formHelpers";
+import { Required } from "./Required";
 
 export const StepSection = ({ state, setters }: any) => {
   const addStep = () => {
@@ -20,8 +22,11 @@ export const StepSection = ({ state, setters }: any) => {
   };
 
   return (
-    <section>
-      <label className={inputs.label}>Instruktioner</label>
+    <section className="relative">
+      <label className={inputs.label}>
+        Instruktioner
+        <Required />
+      </label>
       <div className="flex flex-col gap-2 mb-3">
         {state.steps.map((s: any) => (
           <div key={s.id} className={layout.ingredientRow}>
@@ -46,9 +51,7 @@ export const StepSection = ({ state, setters }: any) => {
           onKeyDown={(e) =>
             e.key === "Enter" && !e.shiftKey && (e.preventDefault(), addStep())
           }
-          className={`flex-1 px-3 py-2 border rounded-xl resize-none focus:ring-2 focus:ring-focus outline-none ${
-            state.errors.steps ? "border-[#B8312F]" : "border-border"
-          }`}
+          className={`${inputClass("steps", state.errors)} flex-1 resize-none`}
           rows={2}
           placeholder="Lägg till steg..."
         />

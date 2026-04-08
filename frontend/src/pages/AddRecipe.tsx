@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import RecipeForm from "../components/RecipeForm";
 
 export default function NyttRecept() {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<"manual" | "link">("manual");
   const [linkUrl, setLinkUrl] = useState("");
   const [loadingLink, setLoadingLink] = useState(false);
@@ -72,7 +74,11 @@ export default function NyttRecept() {
       )}
 
       {/* Manual form */}
-      {mode === "manual" && <RecipeForm />}
+      {mode === "manual" && (
+        <RecipeForm
+          onSuccess={(id, category) => navigate(`/recept/${category}/${id}`)}
+        />
+      )}
     </div>
   );
 }

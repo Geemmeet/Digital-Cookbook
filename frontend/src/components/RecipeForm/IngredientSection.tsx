@@ -1,4 +1,7 @@
 import { inputs, buttons, layout, errorMessage } from "../../styles/theme";
+import { Required } from "./Required";
+import { useIngredientForm } from "../hooks/useIngredientForm";
+import { inputClass } from "../../utils/formHelpers";
 
 export const IngredientSection = ({ state, setters }: any) => {
   const unitGroups = [
@@ -8,20 +11,14 @@ export const IngredientSection = ({ state, setters }: any) => {
     { label: "Övrigt", units: ["st", "portioner", "nypa"] },
   ];
 
-  const add = () => {
-    if (!state.currentIngredient.name || !state.currentIngredient.amount)
-      return;
-    setters.setIngredients([
-      ...state.ingredients,
-      { ...state.currentIngredient, id: Date.now() },
-    ]);
-    setters.setCurrentIngredient({ amount: "", unit: "dl", name: "" });
-    setters.setErrors((p: any) => ({ ...p, ingredients: "" }));
-  };
+  const { touched, hasError, add } = useIngredientForm(state, setters);
 
   return (
-    <section>
-      <label className={inputs.label}>Ingredienser</label>
+    <section className="relative">
+      <label className={inputs.label}>
+        Ingredienser
+        <Required />
+      </label>
       <div className="flex flex-col gap-2 mb-3">
         {state.ingredients.map((ing: any) => (
           <div key={ing.id} className={layout.ingredientRow}>
@@ -43,62 +40,95 @@ export const IngredientSection = ({ state, setters }: any) => {
         ))}
       </div>
 
-      {/* Input-raden */}
-      <div className="flex gap-2 items-start">
-        <input
-          type="number"
-          step="any"
-          placeholder="Mängd"
-          value={state.currentIngredient.amount}
-          onChange={(e) =>
-            setters.setCurrentIngredient({
-              ...state.currentIngredient,
-              amount: e.target.value,
-            })
-          }
-          className={`${inputs.base} w-1 px-2`}
-        />
-        <select
-          value={state.currentIngredient.unit}
-          onChange={(e) =>
-            setters.setCurrentIngredient({
-              ...state.currentIngredient,
-              unit: e.target.value,
-            })
-          }
-          className={`${inputs.base} w-auto min-w-[75px]`} // Anpassad efter måttet
-        >
-          {unitGroups.map((g) => (
-            <optgroup key={g.label} label={g.label}>
-              {g.units.map((u) => (
-                <option key={u} value={u}>
-                  {u}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Ingrediens"
-          value={state.currentIngredient.name}
-          onChange={(e) =>
-            setters.setCurrentIngredient({
-              ...state.currentIngredient,
-              name: e.target.value,
-            })
-          }
-          onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
-          className={`${inputs.base} flex-1`} // Tar upp resten av platsen
-        />
-        <button type="button" onClick={add} className={buttons.plus}>
-          +
-        </button>
+      <div className="flex flex-col gap-2">
+        {/* Mobil: mängd + mått på egen rad. Desktop: alla på en rad */}
+        <div className="flex gap-2">
+          {/* Mängd */}
+          <input
+            type="number"
+            step="any"
+            placeholder="Mängd"
+            min="0"
+            max="999"
+            value={state.currentIngredient.amount}
+            onChange={(e) =>
+              setters.setCurrentIngredient({
+                ...state.currentIngredient,
+                amount: e.target.value,
+              })
+            }
+            className={`${inputClass("ingredients", state.errors)} w-20 px-2 ${touched.amount && !state.currentIngredient.amount ? "!border-primary" : ""}`}
+          />
+          {/* Mått */}
+          <select
+            value={state.currentIngredient.unit}
+            onChange={(e) =>
+              setters.setCurrentIngredient({
+                ...state.currentIngredient,
+                unit: e.target.value,
+              })
+            }
+            className={`${inputs.base} w-28`}
+          >
+            {unitGroups.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.units.map((u) => (
+                  <option key={u} value={u}>
+                    {u}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+          {/* Ingrediensnamn – dold på mobil */}
+          <input
+            type="text"
+            placeholder="Ingrediens"
+            value={state.currentIngredient.name}
+            onChange={(e) =>
+              setters.setCurrentIngredient({
+                ...state.currentIngredient,
+                name: e.target.value,
+              })
+            }
+            onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
+            className={`${inputClass("ingredients", state.errors)} flex-1 hidden sm:block ${touched.name && !state.currentIngredient.name ? "!border-primary" : ""}`}
+          />
+          <button
+            type="button"
+            onClick={add}
+            className={`${buttons.plus} hidden sm:block`}
+          >
+            +
+          </button>
+        </div>
+
+        {/* Mobil: ingrediens + knapp på egen rad */}
+        <div className="flex gap-2 sm:hidden">
+          <input
+            type="text"
+            placeholder="Ingrediens"
+            value={state.currentIngredient.name}
+            onChange={(e) =>
+              setters.setCurrentIngredient({
+                ...state.currentIngredient,
+                name: e.target.value,
+              })
+            }
+            onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
+            className={`${inputClass("ingredients", state.errors)} flex-1 ${touched.name && !state.currentIngredient.name ? "!border-primary" : ""}`}
+          />
+          <button type="button" onClick={add} className={buttons.plus}>
+            +
+          </button>
+        </div>
       </div>
-      
-      {state.errors.ingredients && (
+
+      {(state.errors.ingredients || hasError) && (
         <p className={`${errorMessage.warning} mt-2 w-full`}>
-          {state.errors.ingredients}
+          {hasError
+            ? "Fyll i både mängd och ingrediens."
+            : state.errors.ingredients}
         </p>
       )}
     </section>

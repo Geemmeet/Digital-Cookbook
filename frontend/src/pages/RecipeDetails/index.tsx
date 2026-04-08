@@ -6,6 +6,10 @@ import RecipeSteps from "./RecipeSteps";
 import type { Recipe } from "../../types";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
+//Importer för redigeringsformuläret
+import Modal from "../../components/Modal";
+import RecipeForm from "../../components/RecipeForm";
+
 export default function RecipeDetail() {
   const { category, id } = useParams<{ category: string; id: string }>();
   const navigate = useNavigate();
@@ -30,6 +34,10 @@ export default function RecipeDetail() {
     if (category && id) fetchRecipe();
   }, [category, id]);
 
+  // State för att hantera öppning av redigeringsformuläret
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  // Funktion för att hantera radering av recept
   const handleDelete = async () => {
     if (window.confirm(`Vill du radera "${recipe?.name}"?`)) {
       await fetch(`http://localhost:8000/recept/${id}`, { method: "DELETE" });
@@ -46,7 +54,7 @@ export default function RecipeDetail() {
 
       <div className="w-full md:w-[95%] lg:w-[85%] max-w-[1400px] mx-auto relative">
         {/* Ökat gap till 12 (48px) mellan ingredienser och steg */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch shadow-sm border-x border-gray-100 bg-white">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch bg-white">
           <aside className="md:col-span-5 lg:col-span-4 bg-[#F0E6DC] md:sticky md:top-0 h-fit min-h-screen">
             <RecipeIngredients
               ingredients={recipe.ingredients}
@@ -61,7 +69,7 @@ export default function RecipeDetail() {
             <div className="flex justify-end items-center gap-6 p-12 mt-12 border-t border-gray-50">
               {/* Redigera-knapp */}
               <button
-                onClick={() => navigate(`/redigera/${category}/${id}`)}
+                onClick={() => setIsEditOpen(true)}
                 className="flex items-center gap-2 text-gray-400 hover:text-gray-800 transition-all group"
               >
                 <PencilIcon className="w-4 h-4 transition-transform group-hover:-rotate-12" />
@@ -69,6 +77,21 @@ export default function RecipeDetail() {
                   Redigera Recept
                 </span>
               </button>
+
+              <Modal
+                isOpen={isEditOpen}
+                onClose={() => setIsEditOpen(false)}
+                title="Redigera recept"
+              >
+                <RecipeForm
+                  initialData={recipe}
+                  isEditing={true}
+                  onSuccess={(id, category) => {
+                    setIsEditOpen(false);
+                    navigate(`/recept/${category}/${id}`);
+                  }}
+                />
+              </Modal>
 
               {/* Radera-knapp */}
               <button

@@ -1,33 +1,34 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
-import {validateRecipe} from "../../utils/validation";
+import { validateRecipe } from "../../utils/validation";
 import type { Recipe } from "../../types";
 
 export const useRecipeForm = (
   initialData?: Recipe | null,
   isEditing: boolean = false,
-  onSuccess?: () => void
+  onSuccess?: (id: number, category: string) => void
 ) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [time, setTime] = useState("");
+  const [cooking_time, setCookingTime] = useState("");
   const [servings, setServings] = useState("4");
   const [category, setCategory] = useState("frukost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [ingredients, setIngredients] = useState<any[]>([]);
   const [steps, setSteps] = useState<any[]>([]);
-  
+
   const [currentIngredient, setCurrentIngredient] = useState({ amount: "", unit: "dl", name: "" });
   const [currentStep, setCurrentStep] = useState("");
 
-  // Initialisera data vid redigering
   useEffect(() => {
     if (initialData) {
       setName(initialData.name);
       setDescription(initialData.description || "");
-      setTime(initialData.cooking_time.toString());
+      setCookingTime(initialData.cooking_time.toString());
       setServings(initialData.servings.toString());
       setCategory(initialData.category);
       setImagePreview(initialData.image_url || null);
@@ -41,6 +42,7 @@ export const useRecipeForm = (
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
 
     let finalIngredients = [...ingredients];
     if (currentIngredient.name.trim() && currentIngredient.amount) {
@@ -52,14 +54,14 @@ export const useRecipeForm = (
       finalSteps.push({ id: steps.length + 1, description: currentStep.trim() });
     }
 
-    const validationData = { 
-      name, 
-      cooking_time: parseInt(time) || 0, 
-      servings: parseInt(servings) || 0, 
-      ingredients: finalIngredients, 
-      steps: finalSteps 
+    const validationData = {
+      name,
+      cooking_time: parseInt(cooking_time) || 0,
+      servings: parseInt(servings) || 0,
+      ingredients: finalIngredients,
+      steps: finalSteps,
     };
-    
+
     const newErrors = validateRecipe(validationData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -67,6 +69,8 @@ export const useRecipeForm = (
     }
 
     try {
+      setIsLoading(true);
+
       let foto_url = initialData?.image_url || imagePreview;
 
       if (imageFile) {
@@ -78,13 +82,16 @@ export const useRecipeForm = (
         foto_url = data.publicUrl;
       }
 
-      const url = isEditing ? `http://localhost:8000/recept/${initialData?.id}` : "http://localhost:8000/recept";
+      const url = isEditing
+        ? `http://localhost:8000/recept/${initialData?.id}`
+        : "http://localhost:8000/recept";
+
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, description, category,
-          cooking_time: parseInt(time),
+          cooking_time: parseInt(cooking_time),
           servings: parseInt(servings),
           image_url: foto_url,
           ingredients: finalIngredients.map(({ amount, unit, name }) => ({ amount, unit, name })),
@@ -93,15 +100,20 @@ export const useRecipeForm = (
       });
 
       if (!response.ok) throw new Error("Kunde inte spara");
-      if (onSuccess) onSuccess();
+
+      const savedRecipe = await response.json();
+console.log("savedRecipe:", savedRecipe);
+if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
     } catch (err: any) {
-      alert(err.message);
+      setSubmitError("Något gick fel, försök igen.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
-    state: { name, description, time, servings, category, imagePreview, ingredients, steps, currentIngredient, currentStep, errors },
-    setters: { setName, setDescription, setTime, setServings, setCategory, setImagePreview, setImageFile, setIngredients, setSteps, setCurrentIngredient, setCurrentStep, setErrors },
-    handleSubmit
+    state: { name, description, cooking_time, servings, category, imagePreview, ingredients, steps, currentIngredient, currentStep, errors, isLoading, submitError },
+    setters: { setName, setDescription, setCookingTime, setServings, setCategory, setImagePreview, setImageFile, setIngredients, setSteps, setCurrentIngredient, setCurrentStep, setErrors },
+    handleSubmit,
   };
 };

@@ -4,6 +4,8 @@ import { IngredientSection } from "./IngredientSection";
 import { StepSection } from "./StepSection";
 import { ImageSection } from "./ImageSection";
 import type { Recipe } from "../../types";
+import { inputClass } from "../../utils/formHelpers";
+import { Required } from "./Required";
 
 interface Props {
   initialData?: Recipe | null;
@@ -22,65 +24,101 @@ export default function RecipeForm({
     onSuccess,
   );
 
-  // Hjälpfunktion för felmeddelanden
-  const fieldClass = (errorKey: keyof typeof state.errors) =>
-    `${inputs.base} ${state.errors[errorKey] ? "border-red-500" : ""}`;
-
   return (
     <form
       onSubmit={handleSubmit}
       className="flex flex-col gap-6 text-left pb-10"
     >
       {/* Basinfo */}
-      <div className="space-y-4">
-        <div>
-          <label className={inputs.label}>Namn</label>
+      <div className="flex flex-col gap-4">
+        {/* Namn */}
+        <div className="relative">
+          <label className={inputs.label}>
+            Namn
+            <Required />
+          </label>
           <input
+            placeholder="Köttbullar med potatismos..."
             value={state.name}
             onChange={(e) => {
               setters.setName(e.target.value);
               setters.setErrors({ ...state.errors, name: "" });
             }}
-            className={`${inputs.base} ${state.errors.name ? "border-red-500" : ""}`}
+            className={`${inputClass("name", state.errors)} w-full`}
           />
           {state.errors.name && (
             <p className={errorMessage.warning}>{state.errors.name}</p>
           )}
         </div>
-        <textarea
-          placeholder="Beskrivning..."
-          value={state.description}
-          onChange={(e) => setters.setDescription(e.target.value)}
-          className={inputs.base + " resize-none"}
-          rows={3}
-        />
+
+        {/* Beskrivning */}
+        <div>
+          <label className={inputs.label}>Beskrivning</label>
+          <textarea
+            placeholder="Köttbullar är en av mina favoriträtter..."
+            value={state.description}
+            onChange={(e) => setters.setDescription(e.target.value)}
+            className={`${inputs.base} resize-none w-full`}
+            rows={3}
+          />
+        </div>
       </div>
 
       {/* Grid för tid/portion/kategori */}
       <div className="grid grid-cols-3 gap-4">
-        <input
-          type="number"
-          value={state.time}
-          onChange={(e) => setters.setTime(e.target.value)}
-          className={inputs.base}
-          placeholder="Minuter"
-        />
-        <input
-          type="number"
-          value={state.servings}
-          onChange={(e) => setters.setServings(e.target.value)}
-          className={inputs.base}
-          placeholder="Portioner"
-        />
-        <select
-          value={state.category}
-          onChange={(e) => setters.setCategory(e.target.value)}
-          className={inputs.base}
-        >
-          <option value="frukost">Frukost</option>
-          <option value="lunch">Lunch</option>
-          <option value="middag">Middag</option>
-        </select>
+        <div className="relative">
+          <label className={inputs.label}>
+            Minuter
+            <Required />
+          </label>
+          <input
+            type="number"
+            value={state.cooking_time}
+            onChange={(e) => {
+              setters.setCookingTime(e.target.value);
+              setters.setErrors({ ...state.errors, cooking_time: "" });
+            }}
+            className={`${inputClass("cooking_time", state.errors)} w-full`}
+            placeholder="Minuter"
+          />
+          {state.errors.cooking_time && (
+            <p className={errorMessage.warning}>{state.errors.cooking_time}</p>
+          )}
+        </div>
+        <div className="relative">
+          <label className={inputs.label}>
+            Portioner
+            <Required />
+          </label>
+          <input
+            type="number"
+            value={state.servings}
+            onChange={(e) => {
+              setters.setServings(e.target.value);
+              setters.setErrors({ ...state.errors, servings: "" });
+            }}
+            className={`${inputClass("servings", state.errors)} w-full`}
+            placeholder="Portioner"
+          />
+          {state.errors.servings && (
+            <p className={errorMessage.warning}>{state.errors.servings}</p>
+          )}
+        </div>
+        <div>
+          <label className={inputs.label}>
+            Kategori
+            <Required />
+          </label>
+          <select
+            value={state.category}
+            onChange={(e) => setters.setCategory(e.target.value)}
+            className={`${inputs.base} w-full`}
+          >
+            <option value="frukost">Frukost</option>
+            <option value="lunch">Lunch</option>
+            <option value="middag">Middag</option>
+          </select>
+        </div>
       </div>
 
       <ImageSection state={state} setters={setters} />
@@ -88,8 +126,16 @@ export default function RecipeForm({
       <StepSection state={state} setters={setters} />
 
       {/* Spara-knapp */}
-      <button type="submit" className={buttons.accent + " py-4 text-lg"}>
-        {isEditing ? "Uppdatera recept" : "Spara recept"}
+      <button
+        type="submit"
+        disabled={state.isLoading}
+        className={`${buttons.accent} py-4 text-lg ${state.isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+      >
+        {state.isLoading
+          ? "Sparar..."
+          : isEditing
+            ? "Uppdatera recept"
+            : "Spara recept"}
       </button>
     </form>
   );
