@@ -22,6 +22,9 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # --- CORS MIDDLEWARE ---
+# Krävs eftersom frontend (5173) och backend (8000) körs på olika portar.
+# Webbläsaren blockerar annars requests mellan olika origins.
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

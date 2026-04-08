@@ -1,7 +1,7 @@
-# Kokbok - portfolioprojekt fullstack
+# Digital Kokbok - portfolioprojekt fullstack
 
-> En webbsida för att lagra dina favoritrecept på en och samma plats.
-  Byggt med React + FastAPI + Supabase
+> Samla alla dina favoritrecept på ett ställe – enkelt att lägga till och alltid tillgängliga.
+> Byggt som ett portfolioprojekt med planer på inloggning och sökning i framtiden.
 
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev)
@@ -16,6 +16,7 @@
 Du behöver **Node.js** och **Python** installerat på din dator.
 
 ### 1. Backend (FastAPI)
+
 ```bash
 cd Kokbok/backend
 
@@ -39,6 +40,7 @@ Servern körs på **http://localhost:8000**
 ### 2. Frontend (React + Vite)
 
 Öppna ett nytt terminalfönster:
+
 ```bash
 cd frontend
 npm install
@@ -69,40 +71,27 @@ VITE_API_URL=http://localhost:8000
 ---
 
 ## Projektstruktur
-```text
-Kokbok/
-└── my-app/
-    ├── frontend/    # React-app med Tailwind CSS och Lucide-ikoner
-    └── backend/     # Python-API med Supabase Admin SDK
-```
+
+### Frontend (`/frontend/src`)
+- `assets/` – Bilder och statiska filer
+- `components/` – React-komponenter
+  - `hooks/` – React-hooks (t.ex. formulärlogik)
+  - `RecipeForm/` – Formulärkomponenter för att skapa/redigera recept
+- `pages/` – Sidkomponenter (`/nytt-recept`, `/:category`, `/recept/:category/:id`)
+- `styles/` – CSS och teman
+- `utils/` – Hjälpfunktioner (validering, formulärhjälp)
+
+### Backend (`/backend`)
+- `main.py` – API-routes, CORS-konfiguration och Supabase-uppkoppling
+- `models.py` – Pydantic-modeller för validering av inkommande data
+- `requirements.txt` – Python-beroenden
+
 ---
 
 ## Teknikstack
 
-| Del | Teknik |
-|-----|--------|
-| Frontend | React, Vite, Tailwind CSS, Lucide |
-| Backend | Python, FastAPI, Uvicorn |
-| Databas | Supabase (PostgreSQL) |
-
----
-
-## Teknik & arkitektur
-
-**Frontend**
-- **React** — Bygger användargränssnittet med komponenter och hooks
-- **Vite** — Utvecklingsserver och byggverktyg för React-appen
-- **Tailwind CSS** — Stilsättning direkt i HTML-klasser
-- **Lucide** — Ikonbibliotek
-
-**Backend**
-- **FastAPI** — Python-ramverk som tar emot requests från frontend och hanterar API-logik
-- **Pydantic** — Validerar att inkommande data har rätt format och typ
-- **Uvicorn** — Servern som kör FastAPI-appen
-
-**Databas**
-- **Supabase** — PostgreSQL-databas i molnet, hanteras via Supabase Admin SDK i backend
-
-**Hur det hänger ihop**
-
-React (frontend) → skickar data via HTTP → FastAPI tar emot → Pydantic validerar → Supabase sparar
+| Del      | Teknik                              |
+|----------|-------------------------------------|
+| Frontend | React, Vite, Tailwind CSS, Lucide   |
+| Backend  | Python, FastAPI, Uvicorn            |
+| Databas  | Supabase (PostgreSQL)               |

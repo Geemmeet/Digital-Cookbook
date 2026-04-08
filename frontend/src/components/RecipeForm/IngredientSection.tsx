@@ -56,7 +56,7 @@ export const IngredientSection = ({ state, setters }: any) => {
               amount: e.target.value,
             })
           }
-          className={`${inputs.base} w-1 px-2`} // Kortare bredd
+          className={`${inputs.base} w-1 px-2`}
         />
         <select
           value={state.currentIngredient.unit}
@@ -95,8 +95,7 @@ export const IngredientSection = ({ state, setters }: any) => {
           +
         </button>
       </div>
-
-      {/* Felmeddelandet ligger nu utanför flex-raden */}
+      
       {state.errors.ingredients && (
         <p className={`${errorMessage.warning} mt-2 w-full`}>
           {state.errors.ingredients}

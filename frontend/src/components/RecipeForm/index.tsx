@@ -22,6 +22,10 @@ export default function RecipeForm({
     onSuccess,
   );
 
+  // Hjälpfunktion för felmeddelanden
+  const fieldClass = (errorKey: keyof typeof state.errors) =>
+    `${inputs.base} ${state.errors[errorKey] ? "border-red-500" : ""}`;
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -82,7 +86,6 @@ export default function RecipeForm({
       <ImageSection state={state} setters={setters} />
       <IngredientSection state={state} setters={setters} />
       <StepSection state={state} setters={setters} />
-  
 
       {/* Spara-knapp */}
       <button type="submit" className={buttons.accent + " py-4 text-lg"}>
