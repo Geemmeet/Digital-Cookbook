@@ -1,31 +1,30 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import type { Recipe } from "../types";
+import type { RecipeSummary } from "../types";
 import fallbackImage from "../assets/empty-plate.jpg";
 
 interface RecipeCardProps {
-  recipe: Recipe;
+  recipe: RecipeSummary;
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
-  const originalImage = recipe.image_url || (recipe as any).image;
-  
-  // Skapa ett state för att hantera om bilden saknas ELLER är trasig
-  const [imgError, setImgError] = useState(!originalImage);
+  // 1. Hantera bildfel: Om receptet inte har en bild eller om bilden inte kan laddas, visa en fallback-bild
+  const originalImage = recipe.image_url;
 
-  // Bestäm källan: om vi har ett fel, använd fallback direkt
+  const [imgError, setImgError] = useState(!originalImage);
   const imageSrc = imgError ? fallbackImage : originalImage;
 
   return (
-    <Link to={`/recept/${recipe.id}`}>
+    // 2. Länken är nu dynamisk baserat på receptets kategori och ID
+    <Link to={`/recept/${recipe.category}/${recipe.id}`}>
       <div className="rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer">
         <div className="w-full aspect-square overflow-hidden bg-gray-50 relative">
           <img
             src={imageSrc}
             alt={recipe.name}
             className={`w-full h-full object-cover transition-all duration-500 ${
-              imgError 
-                ? "grayscale saturate-0 opacity-70" 
+              imgError
+                ? "grayscale saturate-0 opacity-70"
                 : "grayscale-0 saturate-100"
             }`}
             onError={() => setImgError(true)}
@@ -45,7 +44,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
             {recipe.name}
           </h2>
           <div className="flex justify-between text-sm text-gray-500">
-            <span>{recipe.time} min</span>
+            <span>{recipe.cooking_time} min</span>
             <span>{recipe.servings} portioner</span>
           </div>
         </div>

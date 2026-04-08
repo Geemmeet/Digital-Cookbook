@@ -1,5 +1,5 @@
 import { useState } from "react";
-import RecipeForm from "../components/Form";
+import RecipeForm from "../components/RecipeForm";
 
 export default function NyttRecept() {
   const [mode, setMode] = useState<"manual" | "link">("manual");

@@ -3,8 +3,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 # Här importerar vi modellerna från din models.py-fil
-from models import RecipeModel, IngredientModel 
-from typing import List
+from models import RecipeModel, RecipeUpdateModel
 from supabase import create_client, Client
 
 # Ladda in variablerna från .env-filen
@@ -25,9 +24,8 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 # --- CORS MIDDLEWARE ---
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origins=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -103,22 +101,30 @@ async def get_recipes_by_category(kategori: str):
 
 # API Endpoint för att hämta ett specifikt recept
 @app.get("/recept/{kategori}/{recept_id}")
-async def get_specific_recipe(kategori: str, recept_id: int):
+async def get_specific_recipe(kategori: str, recept_id: str):
     try:
-        response = supabase.table("recipes") \
-            .select("*") \
-            .eq("id", recept_id) \
-            .eq("category", kategori.lower()) \
-            .single() \
-            .execute()
-        
-        return response.data
+        # 1. Hämta basinfot (Namn, Tid, Bild, Portioner)
+        recipe_res = supabase.table("recipes").select("*").eq("id", recept_id).single().execute()
+        recipe_data = recipe_res.data
+
+        # 2. Hämta ingredienserna som hör till detta recept_id
+        ing_res = supabase.table("ingredients").select("*").eq("recipe_id", recept_id).execute()
+        recipe_data["ingredients"] = ing_res.data
+
+        # 3. Hämta stegen och sortera dem efter step_number
+        steps_res = supabase.table("steps").select("*").eq("recipe_id", recept_id).order("step_number").execute()
+        recipe_data["steps"] = steps_res.data
+
+        # Nu innehåller recipe_data allt som din React-komponent behöver!
+        return recipe_data
+
     except Exception as e:
-        raise HTTPException(status_code=404, detail="Receptet hittades inte")
+        print(f"Backend-fel: {str(e)}")
+        raise HTTPException(status_code=404, detail="Receptet kunde inte läsas in helt")
 
 # API Endpoint för att radera ett recept (inklusive bild)   
 @app.delete("/recept/{recept_id}")
-async def delete_recipe(recept_id: int):
+async def delete_recipe(recept_id: str):
     try:
         # 1. Hämta receptet först för att få tag på image_url
         response = supabase.table("recipes").select("image_url").eq("id", recept_id).single().execute()
@@ -141,6 +147,44 @@ async def delete_recipe(recept_id: int):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Kunde inte radera: {str(e)}")
+
+# API Endpoint för att uppdatera ett recept
+@app.put("/recept/{recept_id}")
+async def update_recipe(recept_id: str, data: RecipeUpdateModel):
+    try:
+        # 1. Uppdatera bas-informationen i 'recipes'-tabellen
+        supabase.table("recipes").update({
+            "name": data.name,
+            "category": data.category.lower(),
+            "cooking_time": data.cooking_time,
+            "servings": data.servings,
+            "description": data.description,
+            "image_url": data.image_url
+        }).eq("id", recept_id).execute()
+
+        # 2. Hantera ingredienser: Ta bort gamla och lägg till nya
+        supabase.table("ingredients").delete().eq("recipe_id", recept_id).execute()
+        
+        ingredients_to_insert = [
+            {"recipe_id": recept_id, "name": ing.name, "amount": ing.amount, "unit": ing.unit}
+            for ing in data.ingredients
+        ]
+        supabase.table("ingredients").insert(ingredients_to_insert).execute()
+
+        # 3. Hantera instruktioner: Ta bort gamla och lägg till nya
+        supabase.table("steps").delete().eq("recipe_id", recept_id).execute()
+        
+        steps_to_insert = [
+            {"recipe_id": recept_id, "step_number": i + 1, "description": step}
+            for i, step in enumerate(data.steps)
+        ]
+        supabase.table("steps").insert(steps_to_insert).execute()
+
+        return {"status": "success", "message": f"Recept {recept_id} har uppdaterats"}
+
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Kunde inte uppdatera receptet")
 
 # --- STARTA SERVERN ---
 if __name__ == "__main__":

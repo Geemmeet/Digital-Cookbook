@@ -1,10 +1,11 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Navbar from './components/navbar'
-import Footer from './components/Footer'
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 
-import CategoryPage from './pages/CategoryPage'
-import RecipeDetail from './pages/RecipeDetail'
-import NyttRecept from './pages/NyttRecept'
+import CategoryPage from "./pages/CategoryPage";
+// Eftersom filen heter index.tsx inuti mappen RecipeDetails räcker det att peka på mappen
+import RecipeDetail from "./pages/RecipeDetails";
+import NyttRecept from "./pages/AddRecipe";
 
 function App() {
   return (
@@ -12,22 +13,23 @@ function App() {
       <Navbar />
       <div className="min-h-screen">
         <Routes>
-          {/* 1. Kategori */}
-          <Route path="/:category" element={<CategoryPage />} />
-          
-          {/* 2. Recept */}
-          <Route path="/:category/:id" element={<RecipeDetail />} />
-          
-          {/* 3. Nytt recept */}
+          {/* 1. Statiska vägar först */}
+          <Route path="/" element={<Navigate to="/frukost" replace />} />
           <Route path="/nytt-recept" element={<NyttRecept />} />
           
-          {/* 4. Redirect från "/" */}
-          <Route path="/" element={<Navigate to="/frukost" />} />
+          {/* 2. Detaljsidan för ett recept */}
+          <Route path="/recept/:category/:id" element={<RecipeDetail />} />
+
+          {/* 3. Den generella kategorisidan */}
+          <Route path="/:category" element={<CategoryPage />} />
+
+          {/* 4. Catch-all */}
+          <Route path="*" element={<Navigate to="/frukost" replace />} />
         </Routes>
       </div>
       <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

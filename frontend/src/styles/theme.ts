@@ -21,3 +21,7 @@ export const layout = {
   card: "bg-white border border-border rounded-2xl shadow-sm p-6",
   ingredientRow: "flex items-center justify-between bg-surface border border-border rounded-xl px-4 py-3",
 };
+
+export const errorMessage = {
+  warning: "text-[#B8312F] text-xs mt-1 font-medium italic"
+}
