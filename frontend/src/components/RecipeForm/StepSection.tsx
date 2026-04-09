@@ -2,23 +2,43 @@ import { inputs, buttons, layout, errorMessage } from "../../styles/theme";
 import { inputClass } from "../../utils/formHelpers";
 import { Required } from "./Required";
 
-export const StepSection = ({ state, setters }: any) => {
+interface Step {
+  id: number;
+  description: string;
+}
+
+interface Props {
+  currentStep: string;
+  steps: Step[];
+  errors: { [key: string]: string };
+  setSteps: (steps: Step[]) => void;
+  setCurrentStep: (step: string) => void;
+  setErrors: React.Dispatch<React.SetStateAction<{ [key: string]: string }>>;
+}
+
+export const StepSection = ({
+  currentStep,
+  steps,
+  errors,
+  setSteps,
+  setCurrentStep,
+  setErrors,
+}: Props) => {
   const addStep = () => {
-    if (!state.currentStep.trim()) return;
-    setters.setSteps([
-      ...state.steps,
-      { id: state.steps.length + 1, description: state.currentStep.trim() },
+    if (!currentStep.trim()) return;
+    setSteps([
+      ...steps,
+      { id: steps.length + 1, description: currentStep.trim() },
     ]);
-    setters.setCurrentStep("");
-    if (state.errors.steps)
-      setters.setErrors((p: any) => ({ ...p, steps: "" }));
+    setCurrentStep("");
+    if (errors.steps) setErrors((p) => ({ ...p, steps: "" }));
   };
 
   const removeStep = (id: number) => {
-    const updatedSteps = state.steps
-      .filter((st: any) => st.id !== id)
-      .map((st: any, index: number) => ({ ...st, id: index + 1 }));
-    setters.setSteps(updatedSteps);
+    const updatedSteps = steps
+      .filter((st) => st.id !== id)
+      .map((st, index) => ({ ...st, id: index + 1 }));
+    setSteps(updatedSteps);
   };
 
   return (
@@ -28,7 +48,7 @@ export const StepSection = ({ state, setters }: any) => {
         <Required />
       </label>
       <div className="flex flex-col gap-2 mb-3">
-        {state.steps.map((s: any) => (
+        {steps.map((s) => (
           <div key={s.id} className={layout.ingredientRow}>
             <p className="text-sm flex gap-2">
               <span className="font-bold text-accent">{s.id}.</span>
@@ -46,12 +66,12 @@ export const StepSection = ({ state, setters }: any) => {
       </div>
       <div className="flex gap-2">
         <textarea
-          value={state.currentStep}
-          onChange={(e) => setters.setCurrentStep(e.target.value)}
+          value={currentStep}
+          onChange={(e) => setCurrentStep(e.target.value)}
           onKeyDown={(e) =>
             e.key === "Enter" && !e.shiftKey && (e.preventDefault(), addStep())
           }
-          className={`${inputClass("steps", state.errors)} flex-1 resize-none`}
+          className={`${inputClass("steps", errors)} flex-1 resize-none`}
           rows={2}
           placeholder="Lägg till steg..."
         />
@@ -63,9 +83,7 @@ export const StepSection = ({ state, setters }: any) => {
           +
         </button>
       </div>
-      {state.errors.steps && (
-        <p className={errorMessage.warning}>{state.errors.steps}</p>
-      )}
+      {errors.steps && <p className={errorMessage.warning}>{errors.steps}</p>}
     </section>
   );
 };

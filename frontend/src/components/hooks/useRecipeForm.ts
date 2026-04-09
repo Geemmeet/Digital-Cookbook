@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import { validateRecipe } from "../../utils/validation";
-import type { Recipe } from "../../types";
+import type { Recipe, IngredientWithId } from "../../types";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const useRecipeForm = (
   initialData?: Recipe | null,
@@ -18,8 +20,8 @@ export const useRecipeForm = (
   const [category, setCategory] = useState("frukost");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [ingredients, setIngredients] = useState<any[]>([]);
-  const [steps, setSteps] = useState<any[]>([]);
+  const [ingredients, setIngredients] = useState<IngredientWithId[]>([]);
+  const [steps, setSteps] = useState<{ id: number; description: string }[]>([]);
 
   const [currentIngredient, setCurrentIngredient] = useState({ amount: "", unit: "dl", name: "" });
   const [currentStep, setCurrentStep] = useState("");
@@ -83,8 +85,8 @@ export const useRecipeForm = (
       }
 
       const url = isEditing
-        ? `http://localhost:8000/recept/${initialData?.id}`
-        : "http://localhost:8000/recept";
+        ? `${BASE_URL}/recept/${initialData?.id}`
+        : `${BASE_URL}/recept`;
 
       const response = await fetch(url, {
         method: isEditing ? "PUT" : "POST",
@@ -102,7 +104,7 @@ export const useRecipeForm = (
       if (!response.ok) throw new Error("Kunde inte spara");
 
       const savedRecipe = await response.json();
-console.log("savedRecipe:", savedRecipe);
+
 if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
     } catch (err: any) {
       setSubmitError("Något gick fel, försök igen.");
@@ -112,8 +114,20 @@ if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
   };
 
   return {
-    state: { name, description, cooking_time, servings, category, imagePreview, ingredients, steps, currentIngredient, currentStep, errors, isLoading, submitError },
-    setters: { setName, setDescription, setCookingTime, setServings, setCategory, setImagePreview, setImageFile, setIngredients, setSteps, setCurrentIngredient, setCurrentStep, setErrors },
+    name, setName,
+    description, setDescription,
+    cooking_time, setCookingTime,
+    servings, setServings,
+    category, setCategory,
+    imagePreview, setImagePreview,
+    setImageFile,
+    ingredients, setIngredients,
+    steps, setSteps,
+    currentIngredient, setCurrentIngredient,
+    currentStep, setCurrentStep,
+    errors, setErrors,
+    isLoading,
+    submitError,
     handleSubmit,
   };
 };

@@ -21,3 +21,7 @@ export interface Ingredient {
   amount: string;
   unit: string;
 }
+
+export interface IngredientWithId extends Ingredient {
+  id: number;
+}

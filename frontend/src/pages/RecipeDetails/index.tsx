@@ -45,15 +45,19 @@ export default function RecipeDetail() {
     }
   };
 
-  if (loading || !recipe)
+  // Visar laddningsindikator medan data hämtas
+  if (loading)
     return <div className="p-20 text-center">Laddar...</div>;
+
+  // Visar meddelande om receptet inte hittades
+  if (!recipe)
+    return <div className="p-20 text-center">Receptet hittades inte.</div>;
 
   return (
     <div className="min-h-screen bg-white pb-24">
       <RecipeHero recipe={recipe} />
 
       <div className="w-full md:w-[95%] lg:w-[85%] max-w-[1400px] mx-auto relative">
-        {/* Ökat gap till 12 (48px) mellan ingredienser och steg */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch bg-white">
           <aside className="md:col-span-5 lg:col-span-4 bg-[#F0E6DC] md:sticky md:top-0 h-fit min-h-screen">
             <RecipeIngredients

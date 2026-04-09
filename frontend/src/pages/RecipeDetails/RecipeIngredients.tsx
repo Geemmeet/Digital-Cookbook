@@ -12,21 +12,18 @@ export default function RecipeIngredients({
 }: Props) {
   const [currentServings, setCurrentServings] = useState(baseServings);
 
-  // Denna useEffect ser till att komponenten "vaknar" när datan landar
   useEffect(() => {
     if (baseServings) {
       setCurrentServings(baseServings);
     }
   }, [baseServings]);
   const getScaledAmount = (amount: string) => {
-    // Ersätter komma med punkt för att parseFloat ska fungera med svenska siffror
     const num = parseFloat(amount.replace(",", "."));
     if (isNaN(num)) return amount;
 
     const ratio = currentServings / baseServings;
     const scaled = num * ratio;
 
-    // Returnerar siffran formaterad enligt svensk standard (t.ex. 1,5 istället för 1.5)
     return scaled.toLocaleString("sv-SE", { maximumFractionDigits: 2 });
   };
 
@@ -36,12 +33,6 @@ export default function RecipeIngredients({
         <h2 className="text-2xl font-bold text-gray-800 uppercase tracking-tight text-center md:text-left">
           Ingredienser
         </h2>
-
-        {/* Portionsväljare:
-            - mx-auto: Centrerar blocket i mobilvyn.
-            - md:mx-0: Tar bort centrering i desktop så flex-box kan sköta placeringen.
-            - flex-shrink-0: Hindrar knappen från att deformeras när utrymmet minskar.
-        */}
       </div>
 
       <div className="flex flex-row flex-nowrap items-center w-fit mx-auto md:mx-0 border border-gray-400/20 rounded-xl overflow-hidden bg-white/40 backdrop-blur-sm shrink-0 h-10">

@@ -1,11 +1,19 @@
 import { inputs } from "../../styles/theme";
 
-export const ImageSection = ({ state, setters }: any) => {
+export const ImageSection = ({
+  imagePreview,
+  setImageFile,
+  setImagePreview,
+}: {
+  imagePreview: string | null;
+  setImageFile: (file: File | null) => void;
+  setImagePreview: (url: string | null) => void;
+}) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setters.setImageFile(file);
-      setters.setImagePreview(URL.createObjectURL(file));
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -13,14 +21,14 @@ export const ImageSection = ({ state, setters }: any) => {
     <section>
       <label className={inputs.label}>Bild</label>
       <div className="w-full rounded-xl border-2 border-dashed border-border overflow-hidden bg-white min-h-[128px] flex items-center justify-center transition-all hover:border-accent/40">
-        {state.imagePreview ? (
+        {imagePreview ? (
           <div className="relative w-full">
-            <img src={state.imagePreview} alt="Preview" className="w-full h-48 object-cover" />
+            <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover" />
             <button
               type="button"
               onClick={() => {
-                setters.setImagePreview(null);
-                setters.setImageFile(null);
+                setImagePreview(null);
+                setImageFile(null);
               }}
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-lg shadow hover:bg-red-600 transition-colors"
             >
