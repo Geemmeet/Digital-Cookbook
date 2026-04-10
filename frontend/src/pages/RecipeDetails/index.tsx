@@ -8,7 +8,10 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 //Importer för redigeringsformuläret
 import Modal from "../../components/Modal";
-import RecipeForm from "../../components/RecipeForm";
+import RecipeForm from "../../components/RecipeForm/index";
+
+const BASE_URL = import.meta.env.VITE_API_URL;
+
 
 export default function RecipeDetail() {
   const { category, id } = useParams<{ category: string; id: string }>();
@@ -21,7 +24,7 @@ export default function RecipeDetail() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:8000/recept/${category}/${id}`,
+          `${BASE_URL}/recept/${category}/${id}`
         );
         const data = await response.json();
         setRecipe(data);
@@ -40,7 +43,7 @@ export default function RecipeDetail() {
   // Funktion för att hantera radering av recept
   const handleDelete = async () => {
     if (window.confirm(`Vill du radera "${recipe?.name}"?`)) {
-      await fetch(`http://localhost:8000/recept/${id}`, { method: "DELETE" });
+      await fetch(`${BASE_URL}/recept/${id}`, { method: "DELETE" });
       navigate("/");
     }
   };

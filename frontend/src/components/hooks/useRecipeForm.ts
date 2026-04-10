@@ -105,13 +105,13 @@ export const useRecipeForm = (
 
       const savedRecipe = await response.json();
 
-if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
-    } catch (err: any) {
-      setSubmitError("Något gick fel, försök igen.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
+          } catch (err: any) {
+            setSubmitError("Något gick fel, försök igen.");
+          } finally {
+            setIsLoading(false);
+          }
+        };
 
   return {
     name, setName,
