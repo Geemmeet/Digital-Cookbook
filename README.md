@@ -1,7 +1,9 @@
-# Digital Kokbok - portfolioprojekt fullstack
+# Digital Cookbook - Fullstack Portfolio Project
 
-> Alla dina recept, alltid nära till hands. Sluta leta efter borttappade länkar och fokusera på matlagningen.
-> Byggt som ett portfolioprojekt med planer på inloggning, filtrering och sökning i framtiden.
+> **Status: Work in Progress 🛠️**
+> This project is currently under active development. Planned features include user authentication, advanced filtering, and search functionality.
+
+> Keep all your recipes in one place. Stop searching for lost links and focus on the cooking. This is a portfolio project designed to explore structured data management and seamless user experiences.
 
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev)
@@ -11,16 +13,16 @@
 
 ---
 
-## Kom igång
+## Getting Started
 
-Du behöver **Node.js** och **Python** installerat på din dator.
+You will need **Node.js** and **Python** installed on your machine.
 
 ### 1. Backend (FastAPI)
 
 ```bash
 cd Kokbok/backend
 
-# Skapa och aktivera virtuell miljö
+# Create and activate virtual environment
 python -m venv venv
 
 # Windows
@@ -28,18 +30,18 @@ python -m venv venv
 # Mac/Linux
 source venv/bin/activate
 
-# Installera beroenden
+# Install dependencies
 pip install -r requirements.txt
 
-# Starta servern
+# Start the server
 python main.py
 ```
 
-Servern körs på **http://localhost:8000**
+The server will run at http://localhost:8000
 
 ### 2. Frontend (React + Vite)
 
-Öppna ett nytt terminalfönster:
+Open a new terminal window:
 
 ```bash
 cd frontend
@@ -47,51 +49,51 @@ npm install
 npm run dev
 ```
 
-Appen körs på **http://localhost:5173**
+The app will run at http://localhost:5173
 
 ---
 
-## Miljövariabler
+## Environment Variables
 
-Skapa följande `.env`-filer innan du startar projektet:
+Create the following .env files before starting the project:
 
 **`/backend/.env`**
 ```env
-SUPABASE_URL=din_supabase_url
-SUPABASE_SERVICE_KEY=din_hemliga_service_role_key
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_KEY=your_secret_service_role_key
 ```
 
 **`/frontend/.env.local`**
 ```env
-VITE_SUPABASE_URL=din_supabase_url
-VITE_SUPABASE_ANON_KEY=din_publika_anon_key
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_public_anon_key
 VITE_API_URL=http://localhost:8000
 ```
 
 ---
 
-## Projektstruktur
+## Project Structure
 
 ### Frontend (`/frontend/src`)
-- `assets/` – Bilder och statiska filer
-- `components/` – React-komponenter
-  - `hooks/` – React-hooks (t.ex. formulärlogik)
-  - `RecipeForm/` – Formulärkomponenter för att skapa/redigera recept
-- `pages/` – Sidkomponenter (`/nytt-recept`, `/:category`, `/recept/:category/:id`)
-- `styles/` – CSS och teman
-- `utils/` – Hjälpfunktioner (validering, formulärhjälp)
+- `assets/` – Images and static files
+- `components/` – React components
+  - `hooks/` – Custom React hooks (e.g., form logic)
+  - `RecipeForm/` – Form components for creating/editing recipes
+- `pages/` – Page components (/new-recipe, /:category, /recipe/:category/:id)
+- `styles/` – CSS and themes
+- `utils/` – Helper functions (validation, form helpers)
 
 ### Backend (`/backend`)
-- `main.py` – API-routes, CORS-konfiguration och Supabase-uppkoppling
-- `models.py` – Pydantic-modeller för validering av inkommande data
-- `requirements.txt` – Python-beroenden
+- `main.py` – API routes, CORS configuration, and Supabase connection
+- `models.py` – Pydantic models for incoming data validation
+- `requirements.txt` – Python dependencies
 
 ---
 
-## Teknikstack
+## Tech Stack
 
 | Del      | Teknik                              |
 |----------|-------------------------------------|
 | Frontend | React, Vite, Tailwind CSS, Lucide   |
 | Backend  | Python, FastAPI, Uvicorn            |
-| Databas  | Supabase (PostgreSQL)               |
+| Database  | Supabase (PostgreSQL)               |
