@@ -35,7 +35,11 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-2 relative group">
             {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
+              const isActive =
+                location.pathname === link.path ||
+                location.pathname.startsWith(
+                  `/recept/${link.name.toLowerCase()}`,
+                );
 
               return (
                 <Link
