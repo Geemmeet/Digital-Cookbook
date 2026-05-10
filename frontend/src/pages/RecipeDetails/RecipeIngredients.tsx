@@ -63,7 +63,10 @@ export default function RecipeIngredients({
             key={idx}
             className="flex justify-between items-baseline py-1 border-b border-gray-400/10"
           >
-            <span className="text-gray-700 capitalize">{ing.name}</span>
+            <span className="text-gray-700">
+              {ing.name.charAt(0).toUpperCase() +
+                ing.name.slice(1).toLowerCase()}
+            </span>
             <span className="font-bold text-gray-900 ml-4 whitespace-nowrap">
               {getScaledAmount(ing.amount)} {ing.unit}
             </span>
