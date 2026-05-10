@@ -9,6 +9,7 @@ export const useRecipe = (category: string | undefined, id: string | undefined) 
 
   const fetchRecipe = async () => {
     if (!category || !id) return;
+    window.scrollTo(0, 0);
     try {
       setLoading(true);
       const response = await fetch(`${BASE_URL}/recept/${category}/${id}`);
