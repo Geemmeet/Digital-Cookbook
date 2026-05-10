@@ -20,7 +20,7 @@ export const useIngredientForm = (
     touchedRef.current = { amount: true, name: true };
     forceRender((n) => n + 1);
     if (!currentIngredient.name || !currentIngredient.amount) return;
-    setIngredients([...ingredients, { ...currentIngredient, id: Date.now() }]);
+    setIngredients([...ingredients, { ...currentIngredient, id: String(Date.now()) }]);
     setCurrentIngredient({ amount: "", unit: "dl", name: "" });
     touchedRef.current = { amount: false, name: false };
     setErrors((p) => ({ ...p, ingredients: "" }));
