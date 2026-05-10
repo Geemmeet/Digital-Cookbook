@@ -1,5 +1,5 @@
 # Digital Cookbook - Fullstack Portfolio Project
-> Keep all your recipes in one place. Stop searching for lost links and focus on the cooking. This is a portfolio project designed to explore structured data management and seamless user experiences.
+> Keep all your recipes in one place. A fullstack portfolio project.
 
 ## Live Demo
 [digital-cookbook-flame.vercel.app](https://digital-cookbook-flame.vercel.app)
