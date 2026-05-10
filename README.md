@@ -1,5 +1,5 @@
 # Digital Cookbook - Fullstack Portfolio Project
-> Keep all your recipes in one place. A fullstack portfolio project.
+> Keep all your recipes in one place.
 
 ## Live Demo
 [digital-cookbook-flame.vercel.app](https://digital-cookbook-flame.vercel.app)
