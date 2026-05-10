@@ -98,3 +98,8 @@ VITE_API_URL=http://localhost:8000
 | Frontend | React, Vite, Tailwind CSS, Lucide   |
 | Backend  | Python, FastAPI, Uvicorn            |
 | Database  | Supabase (PostgreSQL)               |
+
+## Deployment
+
+Frontend is deployed on Vercel.  
+Backend is deployed on Render.

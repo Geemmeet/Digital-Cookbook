@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 // 1. Importera motion från framer-motion
-import { motion, AnimatePresence } from "framer-motion"; 
+import { motion, AnimatePresence } from "framer-motion";
 import pattern from "../assets/pattern.jpg";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
-  const links = [
+  const navLinks = [
     { name: "Frukost", path: "/frukost" },
     { name: "Lunch", path: "/lunch" },
     { name: "Middag", path: "/middag" },
-    { name: "Baka", path: "/baka" }
+    { name: "Baka", path: "/baka" },
+  ];
+
+  const mobileLinks = [
+    ...navLinks,
+    { name: "+ Lägg till recept", path: "/nytt-recept" },
   ];
 
   return (
@@ -21,7 +26,6 @@ export default function Navbar() {
 
       <div className="bg-surface">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          
           <Link
             to="/frukost"
             className="block text-2xl font-black tracking-tight text-primary hover:text-primary-hover transition-colors duration-200"
@@ -30,9 +34,9 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden lg:flex items-center gap-2 relative group">
-            {links.map((link) => {
+            {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
-              
+
               return (
                 <Link
                   key={link.name}
@@ -40,11 +44,13 @@ export default function Navbar() {
                   // 2. 'relative' är viktigt
                   // placera motion.div absolut
                   className={`relative px-5 py-2 text-xl font-bold transition-all duration-300 z-10 ${
-                    isActive ? "text-primary" : "text-gray-500 hover:text-primary"
+                    isActive
+                      ? "text-primary"
+                      : "text-gray-500 hover:text-primary"
                   }`}
                 >
                   {link.name}
-                  
+
                   {/* Animering av understräckningen i navbaren */}
                   <AnimatePresence>
                     {isActive && (
@@ -52,15 +58,14 @@ export default function Navbar() {
                         // 4. 'layoutId' är nyckeln till att animera mellan olika länkar
                         layoutId="active-underline"
                         className="absolute bottom-0 left-0 w-full h-1 bg-primary rounded-full z-0"
-                        
                         // 5. Konfigurera animationen
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{
-                          type: "spring", 
-                          stiffness: 300, 
-                          damping: 30  
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30,
                         }}
                       />
                     )}
@@ -89,7 +94,7 @@ export default function Navbar() {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="lg:hidden px-6 pb-6 flex flex-col gap-2 border-t border-border pt-4 bg-white">
-            {links.map((link) => (
+            {mobileLinks.map((link) => (
               <Link
                 key={link.name}
                 to={link.path}
