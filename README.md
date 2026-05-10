@@ -1,9 +1,13 @@
 # Digital Cookbook - Fullstack Portfolio Project
-
-> **Status: Work in Progress 🛠️**
-> This project is currently under active development. Planned features include user authentication, advanced filtering, and search functionality.
-
 > Keep all your recipes in one place. Stop searching for lost links and focus on the cooking. This is a portfolio project designed to explore structured data management and seamless user experiences.
+
+## Live Demo
+[digital-cookbook-flame.vercel.app](https://digital-cookbook-flame.vercel.app)
+
+## Deployment
+
+Frontend is deployed on Vercel.  
+Backend is deployed on Render.
 
 [![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev)
@@ -99,7 +103,3 @@ VITE_API_URL=http://localhost:8000
 | Backend  | Python, FastAPI, Uvicorn            |
 | Database  | Supabase (PostgreSQL)               |
 
-## Deployment
-
-Frontend is deployed on Vercel.  
-Backend is deployed on Render.
