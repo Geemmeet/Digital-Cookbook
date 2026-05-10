@@ -1,6 +1,6 @@
 // 1. Bas-versionen (för kort i listor, sökresultat osv)
 export interface RecipeSummary {
-  id: number;
+  id: string;
   name: string;
   category: string;
   cooking_time: number;
@@ -23,5 +23,5 @@ export interface Ingredient {
 }
 
 export interface IngredientWithId extends Ingredient {
-  id: number;
+  id: string;
 }

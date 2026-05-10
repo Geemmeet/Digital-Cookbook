@@ -10,7 +10,7 @@ import { Required } from "./Required";
 interface Props {
   initialData?: Recipe | null;
   isEditing?: boolean;
-  onSuccess?: () => void;
+  onSuccess?: (id: string, category: string) => void;
 }
 
 export default function RecipeForm({

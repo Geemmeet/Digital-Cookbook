@@ -1,7 +1,6 @@
 import RecipeCard from './RecipeCard'
 import type { RecipeSummary } from '../types'
 
-// Uppdatera interfacet så det förväntar sig den lätta versionen
 interface RecipeGridProps {
   recipes: RecipeSummary[] 
 }

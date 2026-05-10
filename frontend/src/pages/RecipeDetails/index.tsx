@@ -1,41 +1,24 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RecipeHero from "./RecipeHero";
 import RecipeIngredients from "./RecipeIngredients";
 import RecipeSteps from "./RecipeSteps";
-import type { Recipe } from "../../types";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 //Importer för redigeringsformuläret
 import Modal from "../../components/Modal";
 import RecipeForm from "../../components/RecipeForm/index";
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+//Importer hooks
+import { useRecipe }  from "../../components/hooks/useRecipe";
 
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export default function RecipeDetail() {
   const { category, id } = useParams<{ category: string; id: string }>();
   const navigate = useNavigate();
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchRecipe() {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `${BASE_URL}/recept/${category}/${id}`
-        );
-        const data = await response.json();
-        setRecipe(data);
-      } catch (error) {
-        console.error("Fel vid hämtning:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (category && id) fetchRecipe();
-  }, [category, id]);
+  const { recipe, loading, fetchRecipe } = useRecipe(category, id);
 
   // State för att hantera öppning av redigeringsformuläret
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -49,8 +32,7 @@ export default function RecipeDetail() {
   };
 
   // Visar laddningsindikator medan data hämtas
-  if (loading)
-    return <div className="p-20 text-center">Laddar...</div>;
+  if (loading) return <div className="p-20 text-center">Laddar...</div>;
 
   // Visar meddelande om receptet inte hittades
   if (!recipe)
@@ -62,7 +44,7 @@ export default function RecipeDetail() {
 
       <div className="w-full md:w-[95%] lg:w-[85%] max-w-[1400px] mx-auto relative">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-stretch bg-white">
-          <aside className="md:col-span-5 lg:col-span-4 bg-[#F0E6DC] md:sticky md:top-0 h-fit min-h-screen">
+          <aside className="md:col-span-5 lg:col-span-4 bg-[#F0E6DC] md:sticky md:top-0 h-fit pb-6">
             <RecipeIngredients
               ingredients={recipe.ingredients}
               baseServings={recipe.servings}
@@ -93,9 +75,10 @@ export default function RecipeDetail() {
                 <RecipeForm
                   initialData={recipe}
                   isEditing={true}
-                  onSuccess={(id, category) => {
+                  onSuccess={() => {
                     setIsEditOpen(false);
-                    navigate(`/recept/${category}/${id}`);
+                    window.scrollTo(0, 0);
+                    fetchRecipe();
                   }}
                 />
               </Modal>

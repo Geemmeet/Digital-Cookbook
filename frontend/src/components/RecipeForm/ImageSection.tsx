@@ -39,7 +39,7 @@ export const ImageSection = ({
           <label className="cursor-pointer p-8 flex flex-col items-center w-full">
             <span className="text-2xl mb-1">📷</span>
             <span className="text-sm font-medium text-gray-400">Ladda upp en bild</span>
-            <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageChange} className="hidden" />
           </label>
         )}
       </div>

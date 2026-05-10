@@ -180,6 +180,12 @@ async def update_recipe(recept_id: str, data: RecipeUpdateModel):
             for i, step in enumerate(data.steps)
         ]
         supabase.table("steps").insert(steps_to_insert).execute()
+        
+        return {
+                "status": "success",
+                "id": recept_id,
+                "category": data.category.lower()
+            }
 
     except Exception as e:
         print(f"Error: {e}")

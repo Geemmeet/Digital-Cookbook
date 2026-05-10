@@ -29,12 +29,13 @@ export default function RecipeIngredients({
 
   return (
     <div className="p-[10%] pt-12 lg:pt-16">
-      <div className="flex flex-col md:flex-row items-center md:justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row items-center md:justify-between gap-6 mb-8">
         <h2 className="text-2xl font-bold text-gray-800 uppercase tracking-tight text-center md:text-left">
           Ingredienser
         </h2>
       </div>
 
+      {/* Edit amount of servings */}
       <div className="flex flex-row flex-nowrap items-center w-fit mx-auto md:mx-0 border border-gray-400/20 rounded-xl overflow-hidden bg-white/40 backdrop-blur-sm shrink-0 h-10">
         <button
           onClick={() => setCurrentServings(Math.max(1, currentServings - 1))}
@@ -55,13 +56,14 @@ export default function RecipeIngredients({
         </button>
       </div>
 
-      <ul className="space-y-4">
+      {/* Ingredients list */}
+      <ul className="space-y-4 mt-8">
         {ingredients?.map((ing, idx) => (
           <li
             key={idx}
             className="flex justify-between items-baseline py-1 border-b border-gray-400/10"
           >
-            <span className="text-gray-700">{ing.name}</span>
+            <span className="text-gray-700 capitalize">{ing.name}</span>
             <span className="font-bold text-gray-900 ml-4 whitespace-nowrap">
               {getScaledAmount(ing.amount)} {ing.unit}
             </span>

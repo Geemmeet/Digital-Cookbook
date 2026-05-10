@@ -5,7 +5,7 @@ export default function Footer() {
     <footer>
       <div className="bg-white py-6 text-center text-red-900">
         <p className="font-semibold">Digital Kokbok</p>
-        <p className="text-sm text-red-400 mt-1">© 2026</p>
+        <p className="text-sm text-red-400 mt-1">© 2026 Ellen Gemback</p>
       </div>
       <img src={pattern} alt="" className="w-full h-15 object-cover" />
     </footer>

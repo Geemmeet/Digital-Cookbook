@@ -15,7 +15,6 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const imageSrc = imgError ? fallbackImage : originalImage;
 
   return (
-    // 2. Länken är nu dynamisk baserat på receptets kategori och ID
     <Link to={`/recept/${recipe.category}/${recipe.id}`}>
       <div className="rounded-2xl overflow-hidden bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer">
         <div className="w-full aspect-square overflow-hidden bg-gray-50 relative">

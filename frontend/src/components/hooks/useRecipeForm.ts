@@ -8,7 +8,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 export const useRecipeForm = (
   initialData?: Recipe | null,
   isEditing: boolean = false,
-  onSuccess?: (id: number, category: string) => void
+  onSuccess?: (id: string, category: string) => void
 ) => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ export const useRecipeForm = (
       setServings(initialData.servings.toString());
       setCategory(initialData.category);
       setImagePreview(initialData.image_url || null);
-      setIngredients(initialData.ingredients.map((ing, i) => ({ ...ing, id: i })));
+      setIngredients(initialData.ingredients.map((ing, i) => ({ ...ing, id: String(i) })));
       setSteps(initialData.steps.map((step, i) => ({
         id: i + 1,
         description: typeof step === "string" ? step : (step as any).description,
@@ -48,7 +48,7 @@ export const useRecipeForm = (
 
     let finalIngredients = [...ingredients];
     if (currentIngredient.name.trim() && currentIngredient.amount) {
-      finalIngredients.push({ ...currentIngredient, id: Date.now() });
+      finalIngredients.push({ ...currentIngredient, id: String(Date.now()) });
     }
 
     let finalSteps = [...steps];
@@ -103,8 +103,11 @@ export const useRecipeForm = (
 
       if (!response.ok) throw new Error("Kunde inte spara");
 
+      console.log("Status:", response.status);
       const savedRecipe = await response.json();
-
+      console.log("Svar:", savedRecipe);
+      
+      window.scrollTo(0, 0);
       if (onSuccess) onSuccess(savedRecipe.id, savedRecipe.category);
           } catch (err: any) {
             setSubmitError("Något gick fel, försök igen.");
